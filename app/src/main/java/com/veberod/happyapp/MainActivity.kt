@@ -42,10 +42,12 @@ fun App() {
     HappyAppTheme {
         val navController = rememberNavController()
         Scaffold(
-            topBar = { TopAppBar(title = { Text("Bottom Navigation Demo") }) },
+            //topBar = { TopAppBar(title = { Text("HappyApp") }) },
             content = { NavigationHost(navController = navController) },
             bottomBar = { BottomNavigationBar(navController = navController) }
         )
+
+
     }
 }
 
