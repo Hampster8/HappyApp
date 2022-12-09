@@ -6,4 +6,5 @@ data class User(
     val password: String,
     val gender: String,
     val age: Int,
+    val isAdmin: Boolean
 )

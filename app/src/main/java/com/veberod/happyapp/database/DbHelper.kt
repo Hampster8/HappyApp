@@ -25,7 +25,7 @@ class DbHelper(val context: Context) :
     override fun onCreate(db: SQLiteDatabase) {
         // Create the database tables
         db.execSQL("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT)")
-        db.execSQL("CREATE TABLE user_details (id INTEGER PRIMARY KEY, user_id INTEGER, gender TEXT, age INTEGER, FOREIGN KEY(user_id) REFERENCES users(id))")
+        db.execSQL("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT, password TEXT, isAdmin BOOLEAN)")
         db.execSQL("CREATE TABLE mood_entries (id INTEGER PRIMARY KEY, user_id INTEGER, geolocation TEXT, mood_level INTEGER, timestamp DATETIME, comment TEXT)")
     }
 
@@ -49,7 +49,8 @@ class DbHelper(val context: Context) :
             val password = cursor.getString(cursor.getColumnIndexOrThrow("password"))
             val gender = cursor.getString(cursor.getColumnIndexOrThrow("gender"))
             val age = cursor.getInt(cursor.getColumnIndexOrThrow("age"))
-            User(userId, username, password, gender, age)
+            val isAdmin = cursor.getInt(cursor.getColumnIndexOrThrow("isAdmin")) == 1
+            User(userId, username, password, gender, age, isAdmin)
         } else {
             null
         }
@@ -62,6 +63,7 @@ class DbHelper(val context: Context) :
         val values = ContentValues()
         values.put("username", user.username)
         values.put("password", user.password)
+        values.put("isAdmin", user.isAdmin)
         db.insert("users", null, values)
     }
 
@@ -70,6 +72,7 @@ class DbHelper(val context: Context) :
         val values = ContentValues()
         values.put("username", user.username)
         values.put("password", user.password)
+        values.put("isAdmin", user.isAdmin)
         db.update("users", values, "id = ?", arrayOf(user.id.toString()))
     }
 
@@ -88,13 +91,13 @@ class DbHelper(val context: Context) :
         // Iterate over the results of the query and add each mood entry to the list
         while (cursor.moveToNext()) {
             val id = cursor.getInt(cursor.getColumnIndexOrThrow("id"))
-            val userId = cursor.getInt(cursor.getColumnIndexOrThrow("user_id"))
+            val userIdFromDb = cursor.getInt(cursor.getColumnIndexOrThrow("user_id"))
             val geolocation = cursor.getString(cursor.getColumnIndexOrThrow("geolocation"))
             val moodLevel = cursor.getInt(cursor.getColumnIndexOrThrow("mood_level"))
             val timestampString = cursor.getString(cursor.getColumnIndexOrThrow("timestamp"))
             val timestamp = DateTime.parse(timestampString)
             val comment = cursor.getString(cursor.getColumnIndexOrThrow("comment"))
-            moodEntries.add(MoodEntry(id, userId, geolocation, moodLevel, timestamp, comment))
+            moodEntries.add(MoodEntry(id, userIdFromDb, geolocation, moodLevel, timestamp, comment))
         }
 
         // Close the cursor and return the list of mood entries
