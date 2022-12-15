@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.veberod.happyapp.map_feature.presentation.components.Map
 import com.veberod.happyapp.screens.*
 import com.veberod.happyapp.ui.theme.HappyAppTheme
 

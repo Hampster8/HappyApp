@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'com.veberod.happyapp'
-    compileSdk 32
+    compileSdk 33
 
     defaultConfig {
         applicationId "com.veberod.happyapp"
@@ -47,6 +47,10 @@ android {
 }
 
 dependencies {
+    implementation 'com.google.maps.android:maps-compose:2.7.2'
+    implementation 'androidx.compose.material3:material3:1.1.0-alpha03'
+    implementation 'com.google.android.gms:play-services-maps:18.1.0'
+    implementation 'com.google.maps.android:android-maps-utils:2.3.0'
     implementation 'joda-time:joda-time:2.10.8'
     implementation 'androidx.navigation:navigation-compose:2.5.3'
     implementation 'androidx.core:core-ktx:1.7.0'
