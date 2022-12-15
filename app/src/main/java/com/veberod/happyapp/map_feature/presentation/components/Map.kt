@@ -23,7 +23,7 @@ fun Map() {
         Marker(
             state = MarkerState(position = veberod),
             title = "Veberöd",
-            snippet = "Se på fan"
+            //snippet = ""
         )
 
     }
