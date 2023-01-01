@@ -1,5 +1,6 @@
 package com.veberod.happyapp
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -18,6 +19,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.veberod.happyapp.map_feature.presentation.components.Map
+import com.veberod.happyapp.notifications.createNotification
 import com.veberod.happyapp.screens.*
 import com.veberod.happyapp.ui.theme.HappyAppTheme
 
@@ -26,12 +28,13 @@ class MainActivity : ComponentActivity() {
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotification(this)
         setContent {
             HappyAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
-                    App()
+                    App(this)
                 }
             }
         }
@@ -41,14 +44,14 @@ class MainActivity : ComponentActivity() {
 
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-@Preview(showBackground = true)
+//@Preview(showBackground = true)
 @Composable
-fun App() {
+fun App(context: Context) {
     HappyAppTheme {
         val navController = rememberNavController()
         Scaffold(
             //topBar = { TopAppBar(title = { Text("HappyApp") }) },
-            content = { NavigationHost(navController = navController) },
+            content = { NavigationHost(navController = navController, context) },
             bottomBar = { BottomNavigationBar(navController = navController) }
         )
 
@@ -58,7 +61,7 @@ fun App() {
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun NavigationHost(navController: NavHostController) {
+fun NavigationHost(navController: NavHostController, context: Context) {
     NavHost(navController = navController, startDestination = NavRoutes.Register.route) {
         composable(NavRoutes.Register.route) {
             Register()
@@ -70,7 +73,7 @@ fun NavigationHost(navController: NavHostController) {
             Map()
         }
         composable(NavRoutes.Settings.route) {
-            Settings()
+            Settings(context)
         }
         composable(NavRoutes.Statistics.route) {
             Statistics()
