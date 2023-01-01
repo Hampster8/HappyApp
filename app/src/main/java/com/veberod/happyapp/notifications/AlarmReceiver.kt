@@ -7,6 +7,8 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.media.MediaPlayer
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import com.veberod.happyapp.MainActivity
 import com.veberod.happyapp.R
@@ -15,12 +17,14 @@ import com.veberod.happyapp.R
 const val channelID = "reminder"
 
 class AlarmReceiver: BroadcastReceiver() {
+    @RequiresApi(Build.VERSION_CODES.M)
     override fun onReceive(context: Context, intent: Intent) {
-        var mp = MediaPlayer.create(context, R.raw.song)
+        val mp = MediaPlayer.create(context, R.raw.song)
         mp.start()
         notifyReminder(context)
     }
 
+    @RequiresApi(Build.VERSION_CODES.M)
     private fun notifyReminder(context: Context){
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager

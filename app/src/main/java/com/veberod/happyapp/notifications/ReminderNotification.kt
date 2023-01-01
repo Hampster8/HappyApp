@@ -13,7 +13,6 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
@@ -40,6 +39,7 @@ fun createNotification(context: Context) {
     notificationManager.createNotificationChannel(channel)
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 private fun cancelAlarm(context: Context){
     alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, AlarmReceiver::class.java)
@@ -55,6 +55,7 @@ private fun cancelAlarm(context: Context){
         Toast.LENGTH_LONG).show()
 }
 
+@RequiresApi(Build.VERSION_CODES.M)
 private fun scheduleAlarm(myTime : Calendar, context: Context){
     alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     val intent = Intent(context, AlarmReceiver::class.java)
@@ -77,6 +78,7 @@ private fun scheduleAlarm(myTime : Calendar, context: Context){
         Toast.LENGTH_LONG).show()
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SelectTime(context: Context){
     var timeSet by remember { mutableStateOf(false) }
