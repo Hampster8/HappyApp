@@ -1,5 +1,6 @@
 package com.veberod.happyapp
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -8,16 +9,19 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.veberod.happyapp.feature_register.presentation.components.Register
 import com.veberod.happyapp.map_feature.presentation.components.Map
-import com.veberod.happyapp.screens.*
+import com.veberod.happyapp.screens.Settings
+import com.veberod.happyapp.screens.Smilies
+import com.veberod.happyapp.screens.Statistics
 import com.veberod.happyapp.ui.theme.HappyAppTheme
+
 
 
 class MainActivity : ComponentActivity() {
@@ -28,7 +32,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
-                    App()
+                    App(context = this)
                 }
             }
         }
@@ -37,26 +41,23 @@ class MainActivity : ComponentActivity() {
 
 
 
-@Preview(showBackground = true)
 @Composable
-fun App() {
+fun App(context: Context) {
     HappyAppTheme {
         val navController = rememberNavController()
         Scaffold(
             //topBar = { TopAppBar(title = { Text("HappyApp") }) },
-            content = { NavigationHost(navController = navController) },
+            content = { NavigationHost(navController = navController, context) },
             bottomBar = { BottomNavigationBar(navController = navController) }
         )
-
-
     }
 }
 
 @Composable
-fun NavigationHost(navController: NavHostController) {
+fun NavigationHost(navController: NavHostController, context: Context) {
     NavHost(navController = navController, startDestination = NavRoutes.Register.route) {
         composable(NavRoutes.Register.route) {
-            Register()
+            Register(context)
         }
         composable(NavRoutes.Smilies.route) {
             Smilies()
