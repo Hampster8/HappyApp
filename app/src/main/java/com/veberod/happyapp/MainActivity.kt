@@ -68,7 +68,7 @@ fun App(context: Context) {
 fun NavigationHost(navController: NavHostController, context: Context) {
     NavHost(navController = navController, startDestination = NavRoutes.Register.route) {
         composable(NavRoutes.Register.route) {
-            Register(context)
+            Register(context, navController)
         }
         composable(NavRoutes.Smilies.route) {
             Smilies()
