@@ -5,10 +5,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.TileOverlay
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.google.maps.android.heatmaps.HeatmapTileProvider
+import android.content.Context
+import androidx.compose.runtime.*
+import androidx.compose.ui.platform.LocalContext
+import com.google.android.gms.maps.model.TileOverlayOptions
+import com.google.maps.android.compose.*
+import com.google.maps.android.heatmaps.Gradient
+import com.google.maps.android.heatmaps.WeightedLatLng
+import org.json.JSONArray
+import java.util.*
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun Map() {
@@ -25,6 +37,23 @@ fun Map() {
             title = "Veberöd",
             //snippet = ""
         )
+
+        // Create a list of LatLng points to use as the data for the heatmap
+        val heatMapPoints: List<LatLng> = listOf(
+            LatLng(55.6350, 13.4958),
+            LatLng(55.6355, 13.4955),
+            LatLng(55.6360, 13.4968),
+            LatLng(55.6365, 13.4965)
+        )
+
+        // Create a HeatmapTileProvider object using the specified list of LatLng points
+        val heatmapTileProvider = HeatmapTileProvider.Builder()
+            .data(heatMapPoints)
+            .opacity(0.5)
+            .build()
+
+        // Add a TileOverlay to the map using the HeatmapTileProvider object as the tile provider
+        TileOverlay(tileProvider = heatmapTileProvider)
 
     }
 

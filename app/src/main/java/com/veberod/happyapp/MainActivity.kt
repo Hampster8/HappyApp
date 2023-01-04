@@ -1,9 +1,11 @@
 package com.veberod.happyapp
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -20,19 +22,24 @@ import com.veberod.happyapp.map_feature.presentation.components.Map
 import com.veberod.happyapp.screens.Settings
 import com.veberod.happyapp.screens.Smilies
 import com.veberod.happyapp.screens.Statistics
+import com.veberod.happyapp.notifications.createNotification
+import com.veberod.happyapp.screens.*
 import com.veberod.happyapp.ui.theme.HappyAppTheme
 
 
 
 class MainActivity : ComponentActivity() {
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        createNotification(this)
         setContent {
             HappyAppTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background) {
                     App(context = this)
+                    App(this)
                 }
             }
         }
@@ -41,6 +48,9 @@ class MainActivity : ComponentActivity() {
 
 
 
+
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+//@Preview(showBackground = true)
 @Composable
 fun App(context: Context) {
     HappyAppTheme {
@@ -53,6 +63,7 @@ fun App(context: Context) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun NavigationHost(navController: NavHostController, context: Context) {
     NavHost(navController = navController, startDestination = NavRoutes.Register.route) {
@@ -66,7 +77,7 @@ fun NavigationHost(navController: NavHostController, context: Context) {
             Map()
         }
         composable(NavRoutes.Settings.route) {
-            Settings()
+            Settings(context)
         }
         composable(NavRoutes.Statistics.route) {
             Statistics()

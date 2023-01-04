@@ -32,6 +32,5 @@ object NavBarItems {
             image = Icons.Filled.Favorite,
             route = "settings"
         )
-
     )
 }
