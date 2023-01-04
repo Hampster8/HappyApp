@@ -3,10 +3,12 @@ package com.veberod.happyapp.feature_admin.domain.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 
-@Entity(tableName = "user")
+@Entity(tableName = "user",
+    indices = [Index("email", unique = true), Index("username", unique = true)])
 data class User(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "user_id") val userId: Long,

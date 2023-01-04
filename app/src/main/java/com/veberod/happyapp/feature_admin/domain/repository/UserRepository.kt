@@ -8,7 +8,6 @@ import com.veberod.happyapp.database.UserDao
 import com.veberod.happyapp.feature_admin.domain.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 
@@ -57,21 +56,19 @@ class UserRepository(context: Context, private val scope: CoroutineScope = Corou
         return String(hexChars)
     }
 
-    fun addUser(user: User, context: Context) {
-        try {
-            scope.launch {
-                val hashedPassword = hashPassword(user.password)
-                val userWithHashedPassword = user.copy(password = hashedPassword)
-                userDao.insert(userWithHashedPassword)
-                showToast(context, "User registered successfully")
-            }
+    suspend fun addUser(user: User, context: Context): Boolean {
+        return try {
+            val hashedPassword = hashPassword(user.password)
+            val userWithHashedPassword = user.copy(password = hashedPassword)
+            userDao.insert(userWithHashedPassword)
+            showToast(context, "User registered successfully")
+            true
         } catch (e: Exception) {
-            scope.launch {
-                showToast(context, "Registration failed!")
-
-            }
+            showToast(context, "Registration failed!")
+            false
         }
     }
+
     private suspend fun showToast(context: Context, message: String) {
         withContext(Dispatchers.Main) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
