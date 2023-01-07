@@ -1,4 +1,4 @@
-package com.veberod.happyapp.feature_admin.domain.model
+package com.veberod.happyapp.database.domain.model
 
 import androidx.room.Embedded
 import androidx.room.Relation

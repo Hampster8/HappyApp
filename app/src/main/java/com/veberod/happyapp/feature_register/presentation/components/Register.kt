@@ -1,114 +1,120 @@
 package com.veberod.happyapp.feature_register.presentation.components
 
 import android.content.Context
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
-import androidx.compose.material.Slider
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.veberod.happyapp.NavRoutes
-import com.veberod.happyapp.feature_admin.domain.model.User
-import com.veberod.happyapp.feature_admin.domain.repository.UserRepository
+import com.veberod.happyapp.database.domain.model.User
+import com.veberod.happyapp.database.domain.repository.UserRepository
+import com.veberod.happyapp.feature_register.components.utils.RegisterFormFields
+import com.veberod.happyapp.feature_register.components.utils.ValidationUtils
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 @Composable
 fun Register(context: Context, navController: NavHostController) {
-    var firstName by remember { mutableStateOf("") }
-    var lastName by remember { mutableStateOf("") }
-    var username by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
-    var password by remember { mutableStateOf("") }
-    var confirmPassword by remember { mutableStateOf("") }
-    var gender by remember { mutableStateOf("") }
-    var age by remember { mutableStateOf(0) }
+    val firstName = remember { mutableStateOf("") }
+    val lastName = remember { mutableStateOf("") }
+    val username = remember { mutableStateOf("") }
+    val email = remember { mutableStateOf("") }
+    val password = remember { mutableStateOf("") }
+    val confirmPassword = remember { mutableStateOf("") }
+    val gender = remember { mutableStateOf("") }
+    val age = remember { mutableStateOf(0) }
+    val isAdmin = remember { mutableStateOf(false) }
     val userRepository = UserRepository(context)
     val scope = CoroutineScope(Dispatchers.Default)
 
-
-    Column(modifier = Modifier
-        .padding(16.dp)
-        .fillMaxSize()) {
-
-        TextField(value = firstName,
-            onValueChange = { firstName = it.trim() },
-            label = { Text(text = "First Name") })
-
-
-        TextField(value = lastName,
-            onValueChange = { lastName = it.trim() },
-            label = { Text(text = "Last Name") })
-
-
-        TextField(value = username,
-            onValueChange = { username = it.trim() },
-            label = { Text(text = "Username") })
-
-
-        TextField(value = email, onValueChange = { email = it.trim().lowercase() }, label = { Text(text = "Email") })
-
-
-        TextField(value = password,
-            onValueChange = { password = it.trim() },
-            label = { Text(text = "Password") })
-
-
-        TextField(value = confirmPassword,
-            onValueChange = { confirmPassword = it.trim() },
-            label = { Text(text = "Confirm Password") })
-
-/*        Text(text = "Gender")
-        var selectedGender = Gender.MALE
-        GenderSelection(selectedOption = selectedGender, onOptionSelected = { newGender -> selectedGender = newGender})*/
-
-        TextField(value = gender,
-            onValueChange = { gender = it.trim() },
-            label = { Text(text = "Gender") })
-
-
-        Text(text = "Age")
-        Slider(
-            value = age.toFloat(),
-            onValueChange = { age = it.toInt() },
-            valueRange = 0f..100f
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState()),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        RegisterFormFields(
+            firstName,
+            lastName,
+            username,
+            email,
+            password,
+            confirmPassword,
+            gender,
+            age,
+            isAdmin
         )
-        Text("Age: $age")
 
-        Button(onClick = {
-            if (ValidationUtils.isValidEmail(email) && ValidationUtils.isValidPassword(password) && password == confirmPassword) {
-                val user = User(
-                    userId = 0,
-                    firstName = firstName,
-                    lastName = lastName,
-                    username = username,
-                    gender = gender,
-                    age = age,
-                    email = email,
-                    password = password
-                )
-                scope.launch {
-                    if(userRepository.addUser(user, context)){
-                        navController.navigate(NavRoutes.Smilies.route)
+        Button(
+            onClick = {
+                if (ValidationUtils.isFormValid(
+                        firstName.value,
+                        lastName.value,
+                        username.value,
+                        email.value,
+                        password.value,
+                        confirmPassword.value,
+                        gender.value,
+                        isAdmin.value
+
+                    )
+                ) {
+                    scope.launch {
+                        val user = User(
+                            userId = 0,
+                            firstName = firstName.value,
+                            lastName = lastName.value,
+                            username = username.value,
+                            email = email.value,
+                            password = password.value,
+                            gender = gender.value,
+                            age = age.value,
+                            isAdmin = isAdmin.value
+                        )
+                        withContext(Dispatchers.IO) {
+                            userRepository.addUser(user, context)
+                        }
+                        withContext(Dispatchers.Main) {
+                            navController.navigate(NavRoutes.Login.route)
+                        }
                     }
-
+                }
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+        ) {
+            Text(text = "REGISTER")
+        }
+        Button(
+            onClick = {
+                navController.navigate(NavRoutes.Login.route) {
+                    popUpTo("login_page") {
+                        inclusive = true
+                    }
+                    launchSingleTop = true
                 }
             }
-        }) {
-            Text(text = "Register")
+        ) {
+            Text("Back", color = Color.White)
         }
 
     }
 }
-
-
 
 
 /*@Composable

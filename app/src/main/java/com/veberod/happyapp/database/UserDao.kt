@@ -1,8 +1,8 @@
 package com.veberod.happyapp.database
 
 import androidx.room.*
-import com.veberod.happyapp.feature_admin.domain.model.User
-import com.veberod.happyapp.feature_admin.domain.model.UserWithMoods
+import com.veberod.happyapp.database.domain.model.User
+import com.veberod.happyapp.database.domain.model.UserWithMoods
 
 
 @Dao
@@ -25,11 +25,21 @@ interface UserDao {
     @Delete
     fun delete(user: User)
 
+    @Query("SELECT * FROM user WHERE username = :username AND password = :password")
+    fun getByUsernameAndPassword(username: String, password: String): User?
+
+    @Query("SELECT username FROM user WHERE username = :username")
+    fun checkUsername(username: String): String?
+
+    @Query("SELECT email FROM user WHERE email = :email")
+    fun checkEmail(email: String): String?
+
     @Transaction
-    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood WHERE user.user_id = :userId")
+    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password, isAdmin FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood WHERE user.user_id = :userId")
     fun getUserWithMoods(userId: Long): List<UserWithMoods>
 
     @Transaction
-    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood")
+    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password, isAdmin FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood")
     fun getUsersWithMoods(): List<UserWithMoods>
+
 }

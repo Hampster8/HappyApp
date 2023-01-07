@@ -1,11 +1,11 @@
-package com.veberod.happyapp.feature_admin.domain.repository
+package com.veberod.happyapp.database.domain.repository
 
 import android.content.Context
 import android.widget.Toast
 import androidx.room.Room
 import com.veberod.happyapp.database.HappyAppDB
 import com.veberod.happyapp.database.UserDao
-import com.veberod.happyapp.feature_admin.domain.model.User
+import com.veberod.happyapp.database.domain.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -14,9 +14,9 @@ import java.security.MessageDigest
 
 class UserRepository(context: Context, private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
     private val database: HappyAppDB = Room.databaseBuilder(context, HappyAppDB::class.java, "happy_app_database")
+        /*.addMigrations(MIGRATION_2_3)*/
         .build()
     private val userDao: UserDao = database.userDao()
-
 
 
     suspend fun insert(user: User, context: Context) {
@@ -39,6 +39,17 @@ class UserRepository(context: Context, private val scope: CoroutineScope = Corou
         userDao.delete(user)
     }
 
+    suspend fun getByUsernameAndPassword(username: String, password: String): User? {
+        return withContext(Dispatchers.IO) {
+            // Hash the password before querying the database
+            val hashedPassword = hashPassword(password)
+            // Query the database for a user with a matching username and password
+            userDao.getByUsernameAndPassword(username, hashedPassword)
+        }
+    }
+
+
+
     private fun hashPassword(password: String): String {
         val digest = MessageDigest.getInstance("SHA-256")
         val hash = digest.digest(password.toByteArray())
@@ -57,6 +68,14 @@ class UserRepository(context: Context, private val scope: CoroutineScope = Corou
     }
 
     suspend fun addUser(user: User, context: Context): Boolean {
+        if (isUsernameTaken(user.username)) {
+            showToast(context, "Username already taken")
+            return false
+        }
+        if (isEmailTaken(user.email)) {
+            showToast(context, "Email already taken")
+            return false
+        }
         return try {
             val hashedPassword = hashPassword(user.password)
             val userWithHashedPassword = user.copy(password = hashedPassword)
@@ -69,9 +88,17 @@ class UserRepository(context: Context, private val scope: CoroutineScope = Corou
         }
     }
 
-    private suspend fun showToast(context: Context, message: String) {
+    suspend fun showToast(context: Context, message: String) {
         withContext(Dispatchers.Main) {
             Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun isEmailTaken(email: String): Boolean {
+        return userDao.checkEmail(email) != null
+    }
+
+    private fun isUsernameTaken(username: String): Boolean {
+        return userDao.checkUsername(username) != null
     }
 }

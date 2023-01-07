@@ -1,4 +1,4 @@
-package com.veberod.happyapp.notifications
+package com.veberod.happyapp.feature_statistics.presentation.components.notifications
 
 import android.os.Build
 import androidx.annotation.RequiresApi

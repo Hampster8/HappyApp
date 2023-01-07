@@ -1,4 +1,4 @@
-package com.veberod.happyapp.feature_admin.domain.model
+package com.veberod.happyapp.database.domain.model
 
 
 import androidx.room.ColumnInfo
@@ -18,7 +18,8 @@ data class User(
     @ColumnInfo(name = "gender") val gender: String, //Gender
     @ColumnInfo(name = "age") val age: Int,
     @ColumnInfo(name = "email") val email: String,
-    @ColumnInfo(name = "password") val password: String
+    @ColumnInfo(name = "password") val password: String,
+    @ColumnInfo(name = "isAdmin") val isAdmin: Boolean,
 )
 
 /*enum class Gender {
