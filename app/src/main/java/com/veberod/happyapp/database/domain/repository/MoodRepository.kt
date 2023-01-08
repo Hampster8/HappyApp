@@ -1,18 +1,12 @@
 package com.veberod.happyapp.database.domain.repository
 
 import android.content.Context
-import androidx.room.Room
-import com.veberod.happyapp.database.HappyAppDB
-import com.veberod.happyapp.database.MoodDao
+import com.veberod.happyapp.database.DatabaseManager
 import com.veberod.happyapp.database.domain.model.Mood
 
 class MoodRepository(context: Context) {
-    private val database: HappyAppDB = Room.databaseBuilder(context, HappyAppDB::class.java, "happy_app_database")
-        /*.addMigrations(MIGRATION_2_3)*/
-        .build()
-
-
-    private val moodDao: MoodDao = database.moodDao()
+    private val database = DatabaseManager.getInstance(context)
+    private val moodDao = database.getMoodDao()
 
     suspend fun getAllMoods(): List<Mood> {
         return moodDao.getAllMoods()

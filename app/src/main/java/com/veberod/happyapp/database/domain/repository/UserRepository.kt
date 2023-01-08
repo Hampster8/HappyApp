@@ -2,9 +2,7 @@ package com.veberod.happyapp.database.domain.repository
 
 import android.content.Context
 import android.widget.Toast
-import androidx.room.Room
-import com.veberod.happyapp.database.HappyAppDB
-import com.veberod.happyapp.database.UserDao
+import com.veberod.happyapp.database.DatabaseManager
 import com.veberod.happyapp.database.domain.model.User
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,9 +11,8 @@ import java.security.MessageDigest
 
 
 class UserRepository(context: Context, private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
-    private val database: HappyAppDB = Room.databaseBuilder(context, HappyAppDB::class.java, "happy_app_database")
-        .build()
-    private val userDao: UserDao = database.userDao()
+    private val database = DatabaseManager.getInstance(context)
+    private val userDao = database.getUserDao()
 
 
     suspend fun insert(user: User, context: Context) {
@@ -47,6 +44,11 @@ class UserRepository(context: Context, private val scope: CoroutineScope = Corou
         }
     }
 
+    suspend fun loadAllUsers(): List<User> {
+        return withContext(Dispatchers.IO) {
+            userDao.getAll()
+        }
+    }
 
 
     private fun hashPassword(password: String): String {
