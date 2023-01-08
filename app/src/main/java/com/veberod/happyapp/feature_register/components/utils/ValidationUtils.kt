@@ -30,8 +30,7 @@ class ValidationUtils {
                     password.isNotEmpty() &&
                     confirmPassword.isNotEmpty() &&
                     gender.isNotEmpty() &&
-                    password == confirmPassword &&
-                    isAdmin
+                    password == confirmPassword
         }
 
     }

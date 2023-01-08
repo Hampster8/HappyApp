@@ -49,7 +49,7 @@ fun Login(context: Context, navController: NavHostController, userState: Mutable
                 userRepository.getByUsernameAndPassword(username, password)
             }
             if (user != null) {
-                userState.value = userState.value.copy(isLoggedIn = true, user = user)
+                userState.value = userState.value.copy(isLoggedIn = true, user = user, isAdmin = user.isAdmin)
 
                 withContext(Dispatchers.Main) {
                     userRepository.showToast(context, "Login succeeded.")

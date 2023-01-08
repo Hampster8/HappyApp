@@ -9,6 +9,8 @@ import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
@@ -22,8 +24,9 @@ fun RegisterFormFields(
     confirmPassword: MutableState<String>,
     gender: MutableState<String>,
     age: MutableState<Int>,
-    isAdmin: MutableState<Boolean>
+    isAdmin: MutableState<Boolean> = remember { mutableStateOf(false) }
 ) {
+
     Column {
         TextField(
             value = firstName.value,
@@ -87,7 +90,7 @@ fun RegisterFormFields(
 
         Checkbox(
             checked = isAdmin.value,
-            onCheckedChange = { isAdmin.value = it }
+            onCheckedChange = { isAdmin.value = it },
         )
         Text("Is Admin")
 
