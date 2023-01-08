@@ -10,7 +10,10 @@ import kotlinx.coroutines.withContext
 import java.security.MessageDigest
 
 
-class UserRepository(context: Context, private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
+class UserRepository(
+    context: Context,
+    private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)
+) {
     private val database = DatabaseManager.getInstance(context)
     private val userDao = database.getUserDao()
 

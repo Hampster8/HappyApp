@@ -4,7 +4,9 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -47,7 +49,8 @@ fun Login(context: Context, navController: NavHostController, userState: Mutable
                 userRepository.getByUsernameAndPassword(username, password)
             }
             if (user != null) {
-                userState.value = userState.value.copy(isLoggedIn = true)
+                userState.value = userState.value.copy(isLoggedIn = true, user = user)
+
                 withContext(Dispatchers.Main) {
                     userRepository.showToast(context, "Login succeeded.")
                     navController.navigate(NavRoutes.Smilies.route)
@@ -68,6 +71,7 @@ fun Login(context: Context, navController: NavHostController, userState: Mutable
             .fillMaxHeight(0.60f)
             .background(MaterialTheme.colors.background)
             .padding(10.dp)
+            .verticalScroll(rememberScrollState())
 
     ) {
         Box {

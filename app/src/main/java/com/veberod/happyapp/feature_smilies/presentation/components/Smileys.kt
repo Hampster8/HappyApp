@@ -45,7 +45,7 @@ fun Smileys(moodRepository: MoodRepository, userState: MutableState<UserState>, 
         )
 
         for (i in moodImages.indices) {
-            CreateMoodCard(i + 1, moodImages[i], userState, moodRepository, context)
+            CreateMoodCard(4 - i + 1, moodImages[i], userState, moodRepository, context)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
@@ -75,29 +75,22 @@ fun CreateMoodCard(
         Image(painter = moodImage, contentDescription = "Smiley", contentScale = ContentScale.Fit)
     }
 
-    if (showPopup.value) {
+    if (showPopup.value /*&& userState.value.user != null*/) {
         CommentPopup { enteredComment ->
             comment.value = enteredComment
+            val userId = userState.value.user!!.userId
             val commentAsString = comment.value
             showPopup.value = false
 
-            CoroutineScope(Dispatchers.Default).launch {
-                withContext(Dispatchers.IO) {
-                    userState.value.user?.userId
-                        ?.let {
-                            Mood(
-                                0,
-                                it,
-                                currentTimeAndDate,
-                                moodValue,
-                                commentAsString,
-                                geolocation
-                            )
-                        }
-                        ?.let { moodRepository.insert(it) }
-
-                }
-            }
+            val mood = Mood(
+                0,
+                userId,
+                currentTimeAndDate,
+                moodValue,
+                commentAsString,
+                geolocation
+            )
+            insertMood(mood, moodRepository, context)
         }
     }
 }
@@ -133,5 +126,23 @@ fun CommentPopup(onComment: (String) -> Unit) {
 
         }
     )
+}
+
+fun insertMood(mood: Mood, moodRepository: MoodRepository, context: Context) {
+    CoroutineScope(Dispatchers.IO).launch {
+        try {
+            moodRepository.insert(mood)
+            withContext(Dispatchers.Main) {
+                // Update the UI to reflect the successful insertion
+                moodRepository.showToast(context,"Mood inserted successfully")
+            }
+        } catch (e: Exception) {
+            // Handle the error
+            withContext(Dispatchers.Main) {
+                // Update the UI to show the error message
+                moodRepository.showToast(context,"Error: ${e.message}")
+            }
+        }
+    }
 }
 
