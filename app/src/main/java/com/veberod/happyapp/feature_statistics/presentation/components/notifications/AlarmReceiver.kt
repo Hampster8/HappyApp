@@ -38,11 +38,11 @@ class AlarmReceiver: BroadcastReceiver() {
         val notification = NotificationCompat.Builder(context, channelID)
             .setContentTitle("Mood Log Reminder")
             .setContentText("How are you feeling? Don't forget to log your mood today.")
-            .setSmallIcon(R.drawable.ic_launcher_background)
+            .setSmallIcon(R.drawable.smartabyahappyapplogo)
             .setAutoCancel(true)
             .setContentIntent(myPendingIntent)
             .addAction(
-                R.drawable.ic_launcher_background,
+                R.drawable.smartabyahappyapplogo,
                 "Go To App",
                 myPendingIntent
             )

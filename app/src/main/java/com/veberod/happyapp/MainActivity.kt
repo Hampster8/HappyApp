@@ -21,7 +21,7 @@ import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.MoodRepository
 import com.veberod.happyapp.feature_login.presentation.components.Login
 import com.veberod.happyapp.feature_register.presentation.components.Register
-import com.veberod.happyapp.feature_smilies.presentation.components.Smilies
+import com.veberod.happyapp.feature_smilies.presentation.components.Smileys
 import com.veberod.happyapp.feature_statistics.presentation.components.notifications.createNotification
 import com.veberod.happyapp.map_feature.presentation.components.Map
 import com.veberod.happyapp.screens.*
@@ -78,7 +78,7 @@ fun NavigationHost(
                 Register(context, navController)
             }
             composable(NavRoutes.Smilies.route) {
-                Smilies(moodRepository = MoodRepository(context), userState, context)
+                Smileys(moodRepository = MoodRepository(context), userState, context)
             }
             composable(NavRoutes.Map.route) {
                 Map(moodRepository = MoodRepository(context))

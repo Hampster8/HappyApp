@@ -29,11 +29,13 @@ import kotlinx.coroutines.withContext
 
 
 @Composable
-fun Smilies(moodRepository: MoodRepository, userState: MutableState<UserState>, context: Context) {
+fun Smileys(moodRepository: MoodRepository, userState: MutableState<UserState>, context: Context) {
 
-    Column(modifier = Modifier
-        .fillMaxSize()
-        .padding(bottom = 60.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(bottom = 60.dp), horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         val moodImages = listOf(
             painterResource(R.drawable.mood_5),
             painterResource(R.drawable.mood_4),
@@ -61,31 +63,42 @@ fun CreateMoodCard(
     val comment = remember { mutableStateOf("") }
     val locationHelper = LocationHelper(context)
     val geolocation = locationHelper.getCurrentLocation().toString()
+    val currentTimeAndDate = System.currentTimeMillis()
 
     Card(modifier = Modifier
         .clip(CircleShape)
         .size(140.dp)
         .clickable(onClick = {
             showPopup.value = true
-        }), elevation = 4.dp) {
+        }), elevation = 4.dp
+    ) {
         Image(painter = moodImage, contentDescription = "Smiley", contentScale = ContentScale.Fit)
     }
 
     if (showPopup.value) {
-        CommentPopup(onComment = { enteredComment ->
+        CommentPopup { enteredComment ->
             comment.value = enteredComment
+            val commentAsString = comment.value
             showPopup.value = false
 
             CoroutineScope(Dispatchers.Default).launch {
                 withContext(Dispatchers.IO) {
                     userState.value.user?.userId
                         ?.let {
-                            Mood(0, it, System.currentTimeMillis(), moodValue, comment.value, geolocation)
+                            Mood(
+                                0,
+                                it,
+                                currentTimeAndDate,
+                                moodValue,
+                                commentAsString,
+                                geolocation
+                            )
                         }
                         ?.let { moodRepository.insert(it) }
+
                 }
             }
-        })
+        }
     }
 }
 
@@ -99,7 +112,12 @@ fun CommentPopup(onComment: (String) -> Unit) {
         title = { Text("Comment") },
         text = { TextField(value = comment.value, onValueChange = { comment.value = it }) },
         buttons = {
-            Row(modifier = Modifier.fillMaxWidth().padding(8.dp), horizontalArrangement = Arrangement.End) {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
                 Button(onClick = {
                     onComment(comment.value)
                 }) {

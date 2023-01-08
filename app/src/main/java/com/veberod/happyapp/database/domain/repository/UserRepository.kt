@@ -14,7 +14,6 @@ import java.security.MessageDigest
 
 class UserRepository(context: Context, private val scope: CoroutineScope = CoroutineScope(Dispatchers.IO)) {
     private val database: HappyAppDB = Room.databaseBuilder(context, HappyAppDB::class.java, "happy_app_database")
-        /*.addMigrations(MIGRATION_2_3)*/
         .build()
     private val userDao: UserDao = database.userDao()
 

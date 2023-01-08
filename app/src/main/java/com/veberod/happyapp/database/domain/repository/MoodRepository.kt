@@ -19,7 +19,7 @@ class MoodRepository(context: Context) {
     }
 
 
-    suspend fun insert(mood: Mood) {
+    suspend fun insert(mood: Mood): Unit {
         moodDao.insert(mood)
     }
 

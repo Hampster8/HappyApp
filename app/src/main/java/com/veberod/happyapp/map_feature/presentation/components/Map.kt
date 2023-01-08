@@ -27,25 +27,8 @@ fun Map(moodRepository: MoodRepository) {
     ) {
         Marker(
             state = MarkerState(position = veberod),
-<<<<<<< Updated upstream
-            title = "Veberöd",
-            //snippet = ""
-        )
-
-        // Create a list of LatLng points to use as the data for the heatmap
-        val heatMapPoints: List<LatLng> = listOf(
-            LatLng(55.6350, 13.4958),
-            LatLng(55.6355, 13.4955),
-            LatLng(55.6360, 13.4968),
-            LatLng(55.6365, 13.4965),
-            LatLng(55.6365, 13.4965),
-            LatLng(55.6365, 13.4965),
-            LatLng(55.6365, 13.4965),
-            LatLng(55.6365, 13.4965),
-            LatLng(55.6365, 13.4965)
-=======
             title = "Veberöd"
->>>>>>> Stashed changes
+
         )
         val scope = CoroutineScope(Dispatchers.Default)
         scope.launch {
