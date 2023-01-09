@@ -15,6 +15,9 @@ interface MoodDao {
     @Delete
     fun delete(mood: Mood)
 
+    @Query("SELECT * FROM mood WHERE user_id_in_mood = :id")
+    fun getMoodsById(id: Long): List<Mood>
+
     @Query("SELECT * FROM mood")
     fun getAllMoods(): List<Mood>
 

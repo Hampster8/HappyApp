@@ -1,4 +1,4 @@
-package com.veberod.happyapp.screens
+package com.veberod.happyapp.feature_statistics.presentation
 
 import android.graphics.Paint
 import android.graphics.PointF
@@ -9,6 +9,8 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Alignment.Companion.Center
@@ -22,39 +24,86 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import kotlin.random.Random
-
+import com.veberod.happyapp.UserState
+import com.veberod.happyapp.database.domain.model.Mood
+import com.veberod.happyapp.database.domain.repository.MoodRepository
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
+import java.util.*
+import java.util.concurrent.TimeUnit
 
 @Composable
-fun Statistics() {
-    val yStep = 50
-    val random = Random
-    /* to test with random points */
-    //TODO enter datapoints from database here
-    val points = (0..9).map {
-        var num = random.nextInt(350)
-        if (num <= 50)
-            num += 100
-        num.toFloat()
-    }
-    // test with fixed points
-    //val points = listOf(150f,100f,250f,200f,330f,300f,90f,120f,285f,199f)
-    Column(modifier = Modifier.fillMaxSize()) {
+fun Statistics(moodRepository: MoodRepository, userState: MutableState<UserState>) {
+    // Add a state variable to track the time period
+    val timePeriodState = remember { mutableStateOf("last 24 hours") }
 
+    val moodEntries = runBlocking {
+        userState.value.user?.let {
+            withContext(Dispatchers.IO) {
+                moodRepository.getMoodsById(it.userId)
+            }
+        }
+    }
+    val yStep = 1
+
+    Column(modifier = Modifier.fillMaxSize()) {
         TextW()
-        Graph(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(500.dp),
-            xValues = (0..9).map { it + 1 },
-            yValues = (0..6).map { (it + 1) * yStep },
-            points = points,
-            paddingSpace = 16.dp,
-            verticalStep = yStep
-        )
-        ButtonMenu()
+        if (moodEntries != null) {
+            Graph(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp),
+                xValues = getXValuesForTimePeriod(timePeriodState.value, moodEntries),
+                yValues = (0..5).map { (it) * yStep },
+                points = moodEntries.map { it.mood.toFloat() },
+                paddingSpace = 16.dp,
+                verticalStep = yStep
+            )
+        }
+        moodEntries?.let {
+            ButtonMenu(onTimePeriodChanged = { timePeriod ->
+                // Update the timePeriodState when the time period selection is changed
+                timePeriodState.value = timePeriod
+            })
+        }
     }
 }
+
+
+
+
+fun getXValuesForTimePeriod(timePeriod: String, moodEntries: List<Mood>): List<Int> {
+    // Print the length of the moodEntries list before filtering
+    println("Number of mood entries before filtering: ${moodEntries.size}")
+
+    val filteredMoodEntries = when (timePeriod) {
+        "last 24 hours" -> {
+            // Filter mood entries from the last 24 hours
+            val currentTime = Calendar.getInstance().timeInMillis
+            moodEntries.filter { it.date >= currentTime - TimeUnit.HOURS.toMillis(24) }
+        }
+        "yesterday" -> {
+            // Filter mood entries from yesterday
+            val yesterday = Calendar.getInstance().apply { add(Calendar.DATE, -1) }.timeInMillis
+            val today = Calendar.getInstance().timeInMillis
+            moodEntries.filter { it.date in yesterday until today }
+        }
+        "last week" -> {
+            // Filter mood entries from the last week
+            val currentTime = Calendar.getInstance().timeInMillis
+            moodEntries.filter { it.date >= currentTime - TimeUnit.DAYS.toMillis(7) }
+        }
+        else -> moodEntries
+    }
+
+    // Print the length of the filteredMoodEntries list after filtering
+    println("Number of mood entries after filtering: ${filteredMoodEntries.size}")
+
+    return filteredMoodEntries.map { it.date.toInt() }
+}
+
+
 
 @Composable
 fun TextW() {
@@ -74,35 +123,58 @@ fun TextW() {
 }
 
 @Composable
-fun ButtonMenu() {
+fun ButtonMenu(
+    onTimePeriodChanged: (timePeriod: String) -> Unit,
+) {
+    var timePeriod: String
+
     Row(
         horizontalArrangement = Arrangement.SpaceBetween,
         modifier = Modifier
             .fillMaxWidth()
             .padding(2.dp)
     ) {
-        Button( onClick = { /*TODO*/ },
+        Button(
+            onClick = {
+                timePeriod = "last 24 hours"
+                onTimePeriodChanged(timePeriod)
+            },
             shape = RoundedCornerShape(8.dp)
-            //elevation = ButtonDefaults.elevation(defaultElevation = 50.dp, pressedElevation = 8.dp)
-            ){
+        ) {
             Text(
                 text = "Today",
                 style = TextStyle(fontSize = 15.sp)
             )
         }
-        Button( onClick = { /*TODO*/ }) {
+        Button(
+            onClick = {
+                timePeriod = "yesterday"
+                onTimePeriodChanged(timePeriod)
+            }
+        ) {
             Text(
                 text = "Yesterday",
                 style = TextStyle(fontSize = 15.sp)
             )
         }
-        Button( onClick = { /*TODO*/ }) {
+        Button(
+            onClick = {
+                timePeriod = "last week"
+                onTimePeriodChanged(timePeriod)
+            }
+        ) {
             Text(
                 text = "Week",
                 style = TextStyle(fontSize = 15.sp)
             )
         }
-        Button( onClick = { /*TODO*/ }) {
+        Button(
+            onClick = {
+                timePeriod = "last 6 months"
+                onTimePeriodChanged(timePeriod)
+            }
+        ) {
+
             Text(
                 text = "6 months",
                 style = TextStyle(fontSize = 15.sp)
@@ -111,134 +183,10 @@ fun ButtonMenu() {
     }
 }
 
-/*
-@OptIn(ExperimentalMaterialApi::class)
-@Composable
-fun Menu() {
-    val contextForToast = LocalContext.current.applicationContext
-
-    val listItems = arrayOf("Today", "Yesterday", "Week", "6 months")
-
-    var selectedItem by remember {
-        mutableStateOf(listItems[0])
-    }
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    // the box
-    ExposedDropdownMenuBox(
-        expanded = expanded,
-        onExpandedChange = {
-            expanded = !expanded
-        }
-    ) {
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .fillMaxWidth()) {
-
-
-            // text field
-            TextField(
-                value = selectedItem,
-                onValueChange = {},
-                readOnly = true,
-                label = { Text(text = "Period") },
-                trailingIcon = {
-                    ExposedDropdownMenuDefaults.TrailingIcon(
-                        expanded = expanded
-                    )
-                },
-                colors = ExposedDropdownMenuDefaults.textFieldColors(),
-
-                )
-        }
-
-        // menu
-        ExposedDropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false }
-        ) {
-            listItems.forEach { selectedOption ->
-                // menu item
-                DropdownMenuItem(onClick = {
-                    selectedItem = selectedOption
-                    Toast.makeText(contextForToast, selectedOption, Toast.LENGTH_SHORT).show()
-                    expanded = false
-                }) {
-                    Text(text = selectedOption)
-                }
-            }
-        }
-    }
-
-}*/
-
-/*
-@Composable
-fun Menu() {
-    var mExpanded by remember { mutableStateOf(false) }
-
-    // Create a list of cities
-    val mPeriod = listOf("Today", "Yesterday", "Week", "Month", "6 months", "Year")
-
-    // Create a string value to store the selected city
-    var mSelectedText by remember { mutableStateOf("") }
-
-    var mTextFieldSize by remember { mutableStateOf(Size.Zero)}
-
-    // Up Icon when expanded and down icon when collapsed
-    val icon = if (mExpanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    Column(Modifier.padding(20.dp)) {
-
-        // Create an Outlined Text Field
-        // with icon and not expanded
-        OutlinedTextField(
-            value = mSelectedText,
-            onValueChange = { mSelectedText = it },
-            modifier = Modifier
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    // This value is used to assign to
-                    // the DropDown the same width
-                    mTextFieldSize = coordinates.size.toSize()
-                },
-            label = {Text("Label")},
-            trailingIcon = {
-                Icon(icon,"contentDescription",
-                    Modifier.clickable { mExpanded = !mExpanded })
-            }
-        )
-
-        // Create a drop-down menu with list of cities,
-        // when clicked, set the Text Field text as the city selected
-        DropdownMenu(
-            expanded = mExpanded,
-            onDismissRequest = { mExpanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current){mTextFieldSize.width.toDp()})
-        ) {
-            mPeriod.forEach { label ->
-                DropdownMenuItem(onClick = {
-                    mSelectedText = label
-                    mExpanded = false
-                }) {
-                    Text(text = label)
-                }
-            }
-        }
-    }
-}
-*/
 
 @Composable
 fun Graph(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     xValues: List<Int>,
     yValues: List<Int>,
     points: List<Float>,
@@ -256,6 +204,8 @@ fun Graph(
             textSize = density.run { 12.sp.toPx() }
         }
     }
+    println("xValues: $xValues")
+    println("points: $points")
 
     Box(
         modifier = modifier
@@ -287,8 +237,8 @@ fun Graph(
                 )
             }
             /** placing our x axis points */
-            for (i in points.indices) {
-                val x1 = xAxisSpace * xValues[i]
+            for (i in xValues.indices) {
+                val x1 = xAxisSpace * i
                 val y1 = size.height - (yAxisSpace * (points[i] / verticalStep.toFloat()))
                 coordinates.add(PointF(x1, y1))
                 /** drawing circles to indicate all the points */
@@ -355,3 +305,8 @@ fun Graph(
         }
     }
 }
+
+
+
+
+
