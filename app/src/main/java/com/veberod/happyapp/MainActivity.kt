@@ -82,7 +82,7 @@ fun NavigationHost(
                 Smileys(moodRepository = MoodRepository(context), userState, context)
             }
             composable(NavRoutes.Map.route) {
-                Map(moodRepository = MoodRepository(context))
+                Map(/*moodRepository = MoodRepository(context)*/)
             }
             composable(NavRoutes.Statistics.route) {
                 Statistics(moodRepository = MoodRepository(context), userState)

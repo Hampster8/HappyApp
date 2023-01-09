@@ -8,6 +8,7 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.*
 import com.google.maps.android.heatmaps.HeatmapTileProvider
+
 @Composable
 fun Map() {
     val veberod = LatLng(55.6364, 13.5006)
