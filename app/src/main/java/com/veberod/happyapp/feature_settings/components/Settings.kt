@@ -14,13 +14,5 @@ import com.veberod.happyapp.feature_statistics.presentation.components.notificat
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun Settings(context: Context, navController: NavController, userState: MutableState<UserState>) {
-    SelectTime(context)
-
-    Button(onClick = {
-        // set userState to default values
-        userState.value = UserState(isLoggedIn = false)
-        navController.navigate(NavRoutes.Login.route)
-    }) {
-        Text("Logout")
-    }
+    SelectTime(context, navController, userState)
 }

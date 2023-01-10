@@ -90,7 +90,7 @@ fun Login(context: Context, navController: NavHostController, userState: Mutable
             TextField(
                 value = username,
                 onValueChange = { username = it },
-                label = { Text("Username:") }
+                label = { Text("Username") }
             )
             TextField(
                 value = password,

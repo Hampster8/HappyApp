@@ -22,6 +22,9 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.ContextCompat
+import androidx.navigation.NavController
+import com.veberod.happyapp.NavRoutes
+import com.veberod.happyapp.UserState
 import java.util.*
 
 
@@ -78,9 +81,10 @@ private fun scheduleAlarm(myTime : Calendar, context: Context){
         Toast.LENGTH_LONG).show()
 }
 
+
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
-fun SelectTime(context: Context){
+fun SelectTime(context: Context, navController: NavController, userState: MutableState<UserState>){
     var timeSet by remember { mutableStateOf(false) }
     var alarmSet by remember { mutableStateOf(false) }
     //Get alarm status from database
@@ -111,7 +115,6 @@ fun SelectTime(context: Context){
                 "Time has been selected", Toast.LENGTH_LONG).show()
         }, hour, minute, false
     )
-
     var notificationPermissionGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(
@@ -138,7 +141,7 @@ fun SelectTime(context: Context){
             text = "You can select and set a daily reminder time " +
                     "to get notification to register your mood."
         )
-        Spacer(modifier = Modifier.padding(30.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
         Text(
             textAlign = TextAlign.Center,
             //Pass time from database
@@ -149,7 +152,7 @@ fun SelectTime(context: Context){
             },
             fontSize = 20.sp
         )
-        Spacer(modifier = Modifier.padding(15.dp))
+        Spacer(modifier = Modifier.padding(5.dp))
         Button(onClick = {
             timePicker.show()
             timeSet = true
@@ -164,7 +167,6 @@ fun SelectTime(context: Context){
                     alarmSet = true
                     //Put to alarmSet database
                 }else Toast.makeText(context, "Please select a time first.", Toast.LENGTH_LONG).show()
-
             } else {
                 Toast.makeText(context, "Please make sure 'Notification' Permissions are allowed first.", Toast.LENGTH_LONG).show()
                 myPermission.launch(Manifest.permission.POST_NOTIFICATIONS)}
@@ -180,5 +182,12 @@ fun SelectTime(context: Context){
         }
         Spacer(modifier = Modifier.padding(30.dp))
         TrackDays()
+        Button(onClick = {
+            // set userState to default values
+            userState.value = UserState(isLoggedIn = false)
+            navController.navigate(NavRoutes.Login.route)
+        }) {
+            Text("Logout")
+        }
     }
 }
