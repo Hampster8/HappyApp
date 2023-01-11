@@ -1,29 +1,16 @@
 package com.veberod.happyapp.feature_admin.presentation
 
 import android.content.Context
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.dp
-import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.UserRepository
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
-/*@Composable
-fun UserCrudBoard(userRepository: UserRepository, context: Context) {
-    val selectedUser = remember { mutableStateOf<User?>(null) }
+@Composable
+fun Admin(userRepository: UserRepository, context: Context) {
+    Text(text = "Welcome to the Admin Panel")
+}
+
+    /*val selectedUser = remember { mutableStateOf<User?>(null) }
     val scope = CoroutineScope(Dispatchers.Default)
     val userList = remember { mutableStateOf<List<User>>(emptyList()) }
 

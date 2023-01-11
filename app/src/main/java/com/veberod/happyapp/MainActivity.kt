@@ -19,6 +19,8 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.MoodRepository
+import com.veberod.happyapp.database.domain.repository.UserRepository
+import com.veberod.happyapp.feature_admin.presentation.Admin
 import com.veberod.happyapp.feature_login.presentation.components.Login
 import com.veberod.happyapp.feature_register.presentation.components.Register
 import com.veberod.happyapp.feature_settings.components.notifications.createNotification
@@ -90,6 +92,9 @@ fun NavigationHost(
             composable(NavRoutes.Settings.route) {
                 Settings(context, navController ,userState)
             }
+            composable(NavRoutes.Admin.route) {
+                Admin(userRepository = UserRepository(context), context)
+            }
         }
     }
 //}
@@ -114,6 +119,23 @@ fun BottomNavigationBar(navController: NavHostController, userState: MutableStat
                     },
                     icon = {
                         Text(text = navItem.title)
+                    }
+                )
+            }
+            if(userState.value.isAdmin){
+            BottomNavigationItem(
+                    selected = currentRoute == NavRoutes.Admin.route,
+                    onClick = {
+                        navController.navigate(NavRoutes.Admin.route) {
+                            popUpTo(navController.graph.findStartDestination().id) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
+                        }
+                    },
+                    icon = {
+                        Text(text = "Admin")
                     }
                 )
             }
