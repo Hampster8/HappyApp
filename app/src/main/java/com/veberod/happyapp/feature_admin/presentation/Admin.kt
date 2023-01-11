@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -70,26 +71,28 @@ fun UserList(users: List<User>, userRepository: UserRepository) {
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = firstNameState.value,
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { firstNameState.value = it },
                                 label = { Text(text = "First Name") })
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = lastNameState.value,
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { lastNameState.value = it },
                                 label = { Text(text = "Last Name") })
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = usernameState.value,
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { usernameState.value = it },
                                 label = { Text(text = "Username") })
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = emailState.value,
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { emailState.value = it },
                                 label = { Text(text = "Email") })
-                            Checkbox(
-                                checked = isAdminState.value,
-                                onCheckedChange = { isAdminState.value = it })
+
                         }
                         Row(
                             modifier = Modifier
@@ -99,18 +102,31 @@ fun UserList(users: List<User>, userRepository: UserRepository) {
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = ageState.value,
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { ageState.value = it },
                                 label = { Text(text = "Age") })
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = genderState.value,
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { genderState.value = it },
                                 label = { Text(text = "Gender") })
                             TextField(
                                 modifier = Modifier.weight(1f),
                                 value = "********",
+                                textStyle = TextStyle(fontSize = 12.sp),
                                 onValueChange = { passwordState.value = it },
-                                label = { Text(text = "Password") })
+                                label = { Text(text = "Password") }
+
+                            )
+                            Column() {
+                                Text(text = "Is Admin?", fontSize = 12.sp)
+                                Checkbox(
+                                    checked = isAdminState.value,
+
+                                    onCheckedChange = { isAdminState.value = it })
+                            }
+
 
                         }
                         Row(
