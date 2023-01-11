@@ -39,7 +39,7 @@
         </activity>
 
         <receiver
-            android:name=".feature_statistics.presentation.components.notifications.AlarmReceiver"
+            android:name=".feature_settings.components.notifications.AlarmReceiver"
             android:enabled="true" />
     </application>
 

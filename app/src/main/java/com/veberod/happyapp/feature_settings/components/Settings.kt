@@ -9,7 +9,7 @@ import androidx.compose.runtime.*
 import androidx.navigation.NavController
 import com.veberod.happyapp.NavRoutes
 import com.veberod.happyapp.UserState
-import com.veberod.happyapp.feature_statistics.presentation.components.notifications.SelectTime
+import com.veberod.happyapp.feature_settings.components.notifications.SelectTime
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable

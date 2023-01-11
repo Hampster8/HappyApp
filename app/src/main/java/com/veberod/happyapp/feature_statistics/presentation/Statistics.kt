@@ -94,6 +94,16 @@ fun getXValuesForTimePeriod(timePeriod: String, moodEntries: List<Mood>): List<I
             val currentTime = Calendar.getInstance().timeInMillis
             moodEntries.filter { it.date >= currentTime - TimeUnit.DAYS.toMillis(7) }
         }
+        "last month" -> {
+            // Filter mood entries from the last month
+            val currentTime = Calendar.getInstance().timeInMillis
+            moodEntries.filter { it.date >= currentTime - TimeUnit.DAYS.toMillis(30) }
+        }
+        "last 6 months" -> {
+            // Filter mood entries from the last 6 months
+            val currentTime = Calendar.getInstance().timeInMillis
+            moodEntries.filter { it.date >= currentTime - TimeUnit.DAYS.toMillis(180) }
+        }
         else -> moodEntries
     }
 
@@ -170,13 +180,13 @@ fun ButtonMenu(
         }
         Button(
             onClick = {
-                timePeriod = "last 6 months"
+                timePeriod = "last month"
                 onTimePeriodChanged(timePeriod)
             }
         ) {
 
             Text(
-                text = "6 months",
+                text = "Month",
                 style = TextStyle(fontSize = 15.sp)
             )
         }

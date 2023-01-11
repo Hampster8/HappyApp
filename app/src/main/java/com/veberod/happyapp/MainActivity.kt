@@ -21,9 +21,9 @@ import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.MoodRepository
 import com.veberod.happyapp.feature_login.presentation.components.Login
 import com.veberod.happyapp.feature_register.presentation.components.Register
+import com.veberod.happyapp.feature_settings.components.notifications.createNotification
 import com.veberod.happyapp.feature_smilies.presentation.components.Smileys
 import com.veberod.happyapp.feature_statistics.presentation.Statistics
-import com.veberod.happyapp.feature_statistics.presentation.components.notifications.createNotification
 import com.veberod.happyapp.map_feature.presentation.components.Map
 import com.veberod.happyapp.screens.*
 import com.veberod.happyapp.ui.theme.HappyAppTheme

@@ -1,4 +1,4 @@
-package com.veberod.happyapp.feature_statistics.presentation.components.notifications
+package com.veberod.happyapp.feature_settings.components.notifications
 
 
 import android.app.NotificationManager

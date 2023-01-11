@@ -66,11 +66,11 @@ fun UserCrudBoard(userRepository: UserRepository, context: Context) {
 fun UserCard(user: User, onEdit: () -> Unit, onDelete: () -> Unit) {
     Card(modifier = Modifier.clickable(onClick = onEdit)) {
         Column {
-            Text(text = "${user.firstName} ${user.lastName}")
-            Text(text = user.email)
-            Text(text = user.username)
-            Text(text = user.gender)
-            Text(text = user.age.toString())
+            Text("${user.firstName} ${user.lastName}")
+            Text(user.email)
+            Text(user.username)
+            Text(user.gender)
+            Text(user.age.toString())
         }
     }
     Button(onClick = onDelete) {
