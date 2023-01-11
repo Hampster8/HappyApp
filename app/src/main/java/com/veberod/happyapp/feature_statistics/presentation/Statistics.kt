@@ -55,7 +55,7 @@ fun Statistics(moodRepository: MoodRepository, userState: MutableState<UserState
                     .fillMaxWidth()
                     .height(500.dp),
                 xValues = getXValuesForTimePeriod(timePeriodState.value, moodEntries),
-                yValues = (0..5).map { (it) * yStep },
+                yValues = (1..5).map { (it) },
                 points = moodEntries.map { it.mood.toFloat() },
                 paddingSpace = 16.dp,
                 verticalStep = yStep
