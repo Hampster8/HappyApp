@@ -14,7 +14,9 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.UserRepository
 import kotlinx.coroutines.*
@@ -27,6 +29,11 @@ fun Admin(userRepository: UserRepository, context: Context) {
                 userRepository.loadAllUsers()
             }
         }
+        Text(modifier = Modifier.align(Alignment.CenterHorizontally),
+            text = "Admin Board",
+            fontSize = 36.sp,
+            fontWeight = FontWeight.Bold
+        )
         UserList(users, userRepository)
     }
 
@@ -101,7 +108,7 @@ fun UserList(users: List<User>, userRepository: UserRepository) {
                                 label = { Text(text = "Gender") })
                             TextField(
                                 modifier = Modifier.weight(1f),
-                                value = passwordState.value,
+                                value = "********",
                                 onValueChange = { passwordState.value = it },
                                 label = { Text(text = "Password") })
 
