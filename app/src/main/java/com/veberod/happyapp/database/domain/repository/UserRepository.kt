@@ -48,9 +48,7 @@ class UserRepository(
     }
 
     suspend fun loadAllUsers(): List<User> {
-        return withContext(Dispatchers.IO) {
-            userDao.getAll()
-        }
+            return userDao.getAll()
     }
 
 
