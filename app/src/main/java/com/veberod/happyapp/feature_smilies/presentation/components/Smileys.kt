@@ -22,6 +22,7 @@ import com.veberod.happyapp.R
 import com.veberod.happyapp.UserState
 import com.veberod.happyapp.database.domain.model.Mood
 import com.veberod.happyapp.database.domain.repository.MoodRepository
+import com.veberod.happyapp.feature_settings.components.notifications.couponIncentive
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -64,12 +65,22 @@ fun CreateMoodCard(
     val locationHelper = LocationHelper(context)
     val geolocation = locationHelper.getCurrentLocation().toString()
     val currentTimeAndDate = System.currentTimeMillis()
+    val showCoupon = remember { mutableStateOf(false) }
+    //If there is date in database get it
+    //Get days in a row from database
+    val daysInARow = remember { mutableStateOf(0) }
+    //var lastClickDate = remember { LocalDate.now() }
 
     Card(modifier = Modifier
         .clip(CircleShape)
         .size(140.dp)
         .clickable(onClick = {
             showPopup.value = true
+            daysInARow.value ++
+            if (daysInARow.value > 7){
+                daysInARow.value = 1
+            }
+            showCoupon.value = true
         }), elevation = 4.dp
     ) {
         Image(painter = moodImage, contentDescription = "Smiley", contentScale = ContentScale.Fit)
@@ -92,6 +103,9 @@ fun CreateMoodCard(
             )
             insertMood(mood, moodRepository, context)
         }
+    }
+    if (showCoupon.value){
+        showCoupon.value = couponIncentive(daysInARow.value)
     }
 }
 

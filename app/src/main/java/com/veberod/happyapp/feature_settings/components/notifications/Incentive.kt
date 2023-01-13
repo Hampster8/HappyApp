@@ -19,6 +19,7 @@ import java.util.*
 
 const val targetDaysInARow = 7
 
+
 @Composable
 fun TrackDays() {
     val showCoupon = remember { mutableStateOf(false) }
@@ -28,19 +29,15 @@ fun TrackDays() {
     //var lastClickDate = remember { LocalDate.now() }
     Button(
         onClick = {
-
             // Pass the old date and days in row and get new days in a row
             //daysInARow.value = checkDates(lastClickDate, daysInARow.value)
-
             daysInARow.value ++
             if (daysInARow.value > 7){
                 daysInARow.value = 1
             }
             // Enter new days in a row to database
             // Delete old date in database and set new one as today
-
             showCoupon.value = true
-
         }) {
         Text("Test Coupon")
     }

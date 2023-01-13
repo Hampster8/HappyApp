@@ -35,11 +35,11 @@ interface UserDao {
     fun checkEmail(email: String): String?
 
     @Transaction
-    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password, isAdmin FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood WHERE user.user_id = :userId")
+    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password, isAdmin, alarmState FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood WHERE user.user_id = :userId")
     fun getUserWithMoods(userId: Long): List<UserWithMoods>
 
     @Transaction
-    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password, isAdmin FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood")
+    @Query("SELECT user_id, f_name, l_name, username, gender, age, email, password, isAdmin, alarmState FROM user LEFT JOIN mood ON user.user_id = mood.user_id_in_mood")
     fun getUsersWithMoods(): List<UserWithMoods>
 
 }

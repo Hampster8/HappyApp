@@ -12,6 +12,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Button
 import androidx.compose.material.Text
@@ -25,6 +26,14 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import com.veberod.happyapp.NavRoutes
 import com.veberod.happyapp.UserState
+import com.veberod.happyapp.database.DatabaseManager
+import com.veberod.happyapp.database.UserDao
+import com.veberod.happyapp.feature_login.presentation.components.Login
+import com.veberod.happyapp.feature_login.presentation.components.currentUser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 
 
@@ -81,12 +90,23 @@ private fun scheduleAlarm(myTime : Calendar, context: Context){
         Toast.LENGTH_LONG).show()
 }
 
+/*fun getState(): Boolean{
+    return currentUser.alarmState
+}
+
+fun setState(context: Context, state: Boolean){
+    val myUser = currentUser
+    myUser.alarmState = state
+    UserDao.update(myUser)
+}*/
+
 
 @RequiresApi(Build.VERSION_CODES.TIRAMISU)
 @Composable
 fun SelectTime(context: Context, navController: NavController, userState: MutableState<UserState>){
     var timeSet by remember { mutableStateOf(false) }
     var alarmSet by remember { mutableStateOf(false) }
+    //val alarmSet = getState()
     //Get alarm status from database
     val calendar = Calendar.getInstance()
     val hour = calendar[Calendar.HOUR_OF_DAY]
@@ -165,6 +185,7 @@ fun SelectTime(context: Context, navController: NavController, userState: Mutabl
                 if(timeSet){
                     scheduleAlarm(timeReceived.value, context)
                     alarmSet = true
+                    //setState(context, true)
                     //Put to alarmSet database
                 }else Toast.makeText(context, "Please select a time first.", Toast.LENGTH_LONG).show()
             } else {
@@ -176,6 +197,7 @@ fun SelectTime(context: Context, navController: NavController, userState: Mutabl
         Button(onClick = {
             cancelAlarm(context)
             alarmSet = false
+            //setState(context, false)
             //Put to alarmSet database
         }) {
             Text(text = "Cancel Reminder")

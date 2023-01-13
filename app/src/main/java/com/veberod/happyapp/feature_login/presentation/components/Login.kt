@@ -25,12 +25,14 @@ import androidx.navigation.NavHostController
 import com.veberod.happyapp.NavRoutes
 import com.veberod.happyapp.R
 import com.veberod.happyapp.UserState
+import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.UserRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
+lateinit var currentUser: User
 
 @Composable
 fun Login(context: Context, navController: NavHostController, userState: MutableState<UserState>) {
@@ -40,6 +42,7 @@ fun Login(context: Context, navController: NavHostController, userState: Mutable
     var passwordVisible by rememberSaveable { mutableStateOf(false) }
 
 
+
     val scope = CoroutineScope(Dispatchers.Main)
 
     fun login() {
@@ -47,6 +50,9 @@ fun Login(context: Context, navController: NavHostController, userState: Mutable
         scope.launch {
             val user = withContext(Dispatchers.IO) {
                 userRepository.getByUsernameAndPassword(username, password)
+            }
+            if (user != null) {
+                currentUser = user
             }
             if (user != null) {
                 userState.value = userState.value.copy(isLoggedIn = true, user = user, isAdmin = user.isAdmin)

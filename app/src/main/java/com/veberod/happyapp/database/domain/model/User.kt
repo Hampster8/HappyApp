@@ -20,6 +20,7 @@ data class User(
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "password") val password: String,
     @ColumnInfo(name = "isAdmin") val isAdmin: Boolean,
+    @ColumnInfo(name = "alarmState") var alarmState: Boolean,
 )
 
 /*enum class Gender {
