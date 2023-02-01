@@ -15,17 +15,17 @@ data class User(
     @ColumnInfo(name = "f_name") val firstName: String,
     @ColumnInfo(name = "l_name") val lastName: String,
     @ColumnInfo(name = "username") val username: String,
-    @ColumnInfo(name = "gender") val gender: String, //Gender
+    @ColumnInfo(name = "gender") val gender: Gender, //Gender
     @ColumnInfo(name = "age") val age: Int,
     @ColumnInfo(name = "email") val email: String,
     @ColumnInfo(name = "password") val password: String,
     @ColumnInfo(name = "isAdmin") val isAdmin: Boolean,
 )
 
-/*enum class Gender {
+enum class Gender {
     MALE,
     FEMALE,
     NON_BINARY
-}*/
+}
 
 

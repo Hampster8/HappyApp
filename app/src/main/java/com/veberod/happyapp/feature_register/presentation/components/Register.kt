@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.veberod.happyapp.database.domain.model.Gender
 import com.veberod.happyapp.database.domain.repository.UserRepository
 import com.veberod.happyapp.feature_register.components.utils.RegisterFormFields
 
@@ -26,10 +27,11 @@ fun Register(context: Context, navController: NavHostController) {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
-    val gender = remember { mutableStateOf("") }
+    val gender = remember { mutableStateOf(Gender.MALE) }
     val age = remember { mutableStateOf(0) }
     val isAdmin = remember { mutableStateOf(false) }
     val userRepository = remember { UserRepository(context) }
+
 
     Column(
         modifier = Modifier

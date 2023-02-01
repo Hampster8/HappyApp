@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.veberod.happyapp.NavRoutes
+import com.veberod.happyapp.database.domain.model.Gender
 import com.veberod.happyapp.database.domain.model.User
 import com.veberod.happyapp.database.domain.repository.UserRepository
 import com.veberod.happyapp.feature_register.components.utils.ValidationUtils
@@ -30,7 +31,7 @@ fun RegisterSubmitButton(
     email: MutableState<String>,
     password: MutableState<String>,
     confirmPassword: MutableState<String>,
-    gender: MutableState<String>,
+    gender: MutableState<Gender>,
     age: MutableState<Int>,
     isAdmin: MutableState<Boolean>
 
